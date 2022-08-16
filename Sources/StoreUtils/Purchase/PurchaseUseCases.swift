@@ -1,5 +1,5 @@
 //
-//  StoreUtils.swift
+//  PurchaseUseCases.swift
 //  
 //
 //  Created by Kai on 2022/8/16.
@@ -7,7 +7,7 @@
 
 import RevenueCat
 
-struct PurchaseManager {
+struct PurchaseUseCases {
     private var rc: Purchases {
         RevenueCat.Purchases.shared
     }
@@ -80,7 +80,7 @@ struct PurchaseManager {
     }
 }
 
-extension PurchaseManager {
+extension PurchaseUseCases {
     func fetchCurrentOffering() async throws -> RevenueCat.Offering? {
         try await rc.offerings().current
     }

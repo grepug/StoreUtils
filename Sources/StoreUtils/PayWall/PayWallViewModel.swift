@@ -8,7 +8,7 @@
 import Foundation
 
 public class PayWallViewModel: ObservableObject {
-    let purchaseManager = PurchaseManager()
+    let pm = PurchaseUseCases()
     
     @Published var selectedPackage: Package?
     @Published var purchaseInfo: PurchaseInfo?
@@ -42,8 +42,8 @@ extension PayWallViewModel {
     func setup() async {
         do {
             state = .loading
-            packages = try await purchaseManager.fetchPackages()
-            purchaseInfo = try await purchaseManager.getPurchaseInfo()
+            packages = try await pm.fetchPackages()
+            purchaseInfo = try await pm.getPurchaseInfo()
             state = .loaded
             isPurchaseLoading = false
         } catch {
@@ -60,7 +60,7 @@ extension PayWallViewModel {
         isPurchaseLoading = true
         
         do {
-            let userCancelled = try await purchaseManager.purchase(package).userCancelled
+            let userCancelled = try await pm.purchase(package).userCancelled
             
             if userCancelled {
                 
