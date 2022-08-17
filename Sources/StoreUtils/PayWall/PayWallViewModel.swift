@@ -18,27 +18,30 @@ public class PayWallViewModel: ObservableObject {
     @Published public var isPurchaseLoading = false
     
     public var purchaseButtonText: String {
-        currentPurchasedPackage?.purchasedText ??
         selectedPackage?.purchaseText ??
         "settings_pro_loading"
     }
     
     public var purchaseButtonDisabled: Bool {
-        currentPurchasedPackage != nil || selectedPackage == nil || !state.isLoaded
+        if currentPurchasedPackage?.isSubscription == false {
+            return true
+        }
+        
+        return selectedPackage == currentPurchasedPackage || !state.isLoaded
     }
     
     var currentPurchasedPackage: Package? {
         guard let info = purchaseInfo,
               state.isLoaded else { return nil }
-        
+
         let activeSubscriptions = info.activeSubscriptions.compactMap { id in
             packages.first { $0.productId == id }
         }
-        
+
         let activePurchases = info.nonConsumableProductIds.compactMap { id in
             packages.first { $0.productId == id }
         }
-        
+
         return activePurchases.first ?? activeSubscriptions.first
     }
     
@@ -80,6 +83,13 @@ public extension PayWallViewModel {
             return
         }
         
+        // 处理订阅转买断的逻辑
+        if !package.isSubscription && currentPurchasedPackage?.isSubscription == true {
+            guard await config.presentConfirm(.convertingFromSubscriptionToLifetime) else {
+                return
+            }
+        }
+        
         isPurchaseLoading = true
         
         do {
@@ -118,6 +128,22 @@ public extension PayWallViewModel {
             config.presentErrorAlert(.restoreFailure)
         }
     }
+    
+    func packageState(_ pkg: Package) -> PayWallPackageState {
+        if currentPurchasedPackage == pkg {
+            return .active
+        }
+        
+        if selectedPackage == pkg {
+            return .selected
+        }
+        
+        return .none
+    }
+}
+
+extension PayWallViewModel {
+
 }
 
 public extension PayWallViewModel {
@@ -135,14 +161,32 @@ public extension PayWallViewModel {
     
 }
 
+public enum PayWallPackageState {
+    case selected, active, none
+}
+
+public enum PayWallConfirmType {
+    case convertingFromSubscriptionToLifetime
+    
+    public var title: String {
+        switch self {
+        case .convertingFromSubscriptionToLifetime: return "您正在订阅，确定是否要购买永久解锁？"
+        }
+    }
+    
+    public var message: String? {
+        nil
+    }
+}
+
 public enum PayWallErrorAlertType {
     case restoreFailure, purchaseFailure, purchaseSuccess
     
     public var title: String {
         switch self {
-        case .purchaseSuccess: return "action_pro_puchase_alert_success"
-        case .restoreFailure: return "action_pro_restore_alert_error"
-        case .purchaseFailure: return "action_pro_puchase_alert_error"
+        case .purchaseSuccess: return "action_pro_puchase_alert_success".loc
+        case .restoreFailure: return "action_pro_restore_alert_error".loc
+        case .purchaseFailure: return "action_pro_puchase_alert_error".loc
         }
     }
 }

@@ -28,7 +28,7 @@ struct PayWall: View {
     var content: some View {
         VStack {
             ForEach(vm.packages) { pkg in
-                packageItem(pkg) {
+                packageItem(pkg, state: vm.packageState(pkg)) {
                     vm.selectedPackage = pkg
                 }
             }
@@ -49,12 +49,15 @@ struct PayWall: View {
         }
     }
     
-    func packageItem(_ package: Package, action: @escaping () -> Void) -> some View {
+    func packageItem(_ package: Package,
+                     state: PayWallPackageState,
+                     action: @escaping () -> Void) -> some View {
         Button {
             action()
         } label: {
             Text(package.title)
-                .foregroundColor(vm.selectedPackage == package ? .orange : .blue)
+                .font(state.font)
+                .foregroundColor(state.foregroundColor)
                 .padding()
                 .border(Color.gray, width: 0.3)
         }
@@ -68,6 +71,10 @@ extension PayWall {
             false
         } presentErrorAlert: { type in
             parentVC().presentAlertController(title: type.title, message: nil, actions: [.ok()])
+        } presentConfirm: { type in
+            let result = await parentVC().presentAlertController(title: type.title, message: type.message, actions: [.cancel, .ok])
+            
+            return result == .ok
         }
         
         config.defaultSelectedPakcage = { packages in
@@ -82,5 +89,22 @@ extension PayWall {
         let nav = UINavigationController(rootViewController: vc)
         
         return nav
+    }
+}
+
+extension PayWallPackageState {
+    var foregroundColor: Color {
+        switch self {
+        case .active: return .orange
+        case .selected: return .blue
+        case .none: return Color(UIColor.label)
+        }
+    }
+    
+    var font: Font {
+        switch self {
+        case .active, .selected: return .body.bold()
+        case .none: return .body
+        }
     }
 }
