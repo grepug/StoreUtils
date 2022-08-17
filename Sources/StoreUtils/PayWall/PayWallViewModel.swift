@@ -23,17 +23,25 @@ public class PayWallViewModel: ObservableObject {
     }
     
     public var purchaseButtonDisabled: Bool {
-        if currentPurchasedPackage?.isSubscription == false {
+        if !state.isLoaded {
             return true
         }
         
-        return selectedPackage == currentPurchasedPackage || !state.isLoaded
+        if hasPurchasedNonsubscription {
+            return true
+        }
+        
+        if let selectedPackage = selectedPackage {
+            return currentPurchasedPackage.contains(selectedPackage)
+        }
+            
+        return true
     }
     
-    var currentPurchasedPackage: Package? {
+    var currentPurchasedPackage: Set<Package> {
         guard let info = purchaseInfo,
-              state.isLoaded else { return nil }
-
+              state.isLoaded else { return [] }
+        
         let activeSubscriptions = info.activeSubscriptions.compactMap { id in
             packages.first { $0.productId == id }
         }
@@ -42,7 +50,11 @@ public class PayWallViewModel: ObservableObject {
             packages.first { $0.productId == id }
         }
 
-        return activePurchases.first ?? activeSubscriptions.first
+        return Set(activeSubscriptions + activePurchases)
+    }
+    
+    var hasPurchasedNonsubscription: Bool {
+        currentPurchasedPackage.contains { !$0.isSubscription }
     }
     
     public init(config: PayWallConfig) {
@@ -84,8 +96,8 @@ public extension PayWallViewModel {
         }
         
         // 处理订阅转买断的逻辑
-        if !package.isSubscription && currentPurchasedPackage?.isSubscription == true {
-            guard await config.presentConfirm(.convertingFromSubscriptionToLifetime) else {
+        if !package.isSubscription && !hasPurchasedNonsubscription {
+            guard await config.presentConfirm(.convertingFromSubscriptionToNonsubscription) else {
                 return
             }
         }
@@ -130,7 +142,7 @@ public extension PayWallViewModel {
     }
     
     func packageState(_ pkg: Package) -> PayWallPackageState {
-        if currentPurchasedPackage == pkg {
+        if currentPurchasedPackage.contains(pkg) {
             return .active
         }
         
@@ -166,11 +178,11 @@ public enum PayWallPackageState {
 }
 
 public enum PayWallConfirmType {
-    case convertingFromSubscriptionToLifetime
+    case convertingFromSubscriptionToNonsubscription
     
     public var title: String {
         switch self {
-        case .convertingFromSubscriptionToLifetime: return "您正在订阅，确定是否要购买永久解锁？"
+        case .convertingFromSubscriptionToNonsubscription: return "您正在订阅，确定是否要购买永久解锁？"
         }
     }
     
