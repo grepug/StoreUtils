@@ -55,11 +55,19 @@ struct PayWall: View {
         Button {
             action()
         } label: {
-            Text(package.title)
-                .font(state.font)
-                .foregroundColor(state.foregroundColor)
-                .padding()
-                .border(Color.gray, width: 0.3)
+            VStack {
+                Text(package.title)
+                Text(package.currentPriceString)
+                
+                if let origin = package.originalPriceString {
+                    Text(origin)
+                        .strikethrough()
+                }
+            }
+            .font(state.font)
+            .foregroundColor(state.foregroundColor)
+            .padding()
+            .border(Color.gray, width: 0.3)
         }
         .buttonStyle(.plain)
     }
@@ -106,5 +114,43 @@ extension PayWallPackageState {
         case .active, .selected: return .body.bold()
         case .none: return .body
         }
+    }
+}
+
+extension Package {
+    var originalPriceString: String? {
+        let product = rcPackage.storeProduct
+        
+        if let introductoryPriceString = product.introductoryPriceString {
+            return introductoryPriceString
+        }
+        
+        let currencyCode = product.currencyCode ?? ""
+        
+        switch product.productIdentifier {
+        case "vis_1y_2w_free":
+            let price = product.price * 1.589
+            
+            return "\(currencyCode) \(price)"
+        case "vis_lifetime_unlock":
+            let ratio = Decimal(216) / Decimal(88)
+            let price = product.price * ratio
+            
+            return "\(currencyCode) \(price.doubleValue.toString(toFixed: 2))"
+        default: return nil
+        }
+    }
+}
+
+extension Double {
+    func toString(toFixed fixed: Int, dropingDotZero: Bool = false) -> String {
+        let string = String(format: "%.\(fixed)f", self)
+        let decimal = truncatingRemainder(dividingBy: 1)
+        
+        if dropingDotZero && decimal == 0 {
+            return String(Int(self))
+        }
+        
+        return string
     }
 }

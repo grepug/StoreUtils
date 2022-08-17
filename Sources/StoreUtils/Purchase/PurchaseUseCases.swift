@@ -60,7 +60,6 @@ struct PurchaseUseCases {
                 let packages: [Package] = skProducts.map { prod in
                         .init(id: prod.productIdentifier,
                               title: prod.localizedTitle,
-                              originalPriceString: prod.originalPriceString,
                               currentPriceString: prod.currentPriceString,
                               isSubscription: prod.subscriptionPeriod != nil,
                               purchased: true,
