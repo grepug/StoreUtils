@@ -9,12 +9,13 @@ import Foundation
 
 public class PayWallViewModel: ObservableObject {
     let pm = PurchaseUseCases()
+    let config: PayWallConfig
     
-    @Published var selectedPackage: Package?
-    @Published var purchaseInfo: PurchaseInfo?
-    @Published var state = PageState.loading
-    @Published var packages: [Package] = []
-    @Published var isPurchaseLoading = false
+    @Published public var selectedPackage: Package?
+    @Published public var purchaseInfo: PurchaseInfo?
+    @Published public var state = PageState.loading
+    @Published public var packages: [Package] = []
+    @Published public var isPurchaseLoading = false
     
     var currentPurchasedPackage: Package? {
         guard let info = purchaseInfo,
@@ -31,26 +32,34 @@ public class PayWallViewModel: ObservableObject {
         return activePurchases.first ?? activeSubscriptions.first
     }
     
-    init() {
+    public init(config: PayWallConfig) {
+        self.config = config
+        
         Task {
-            await setup()
+            await reload()
         }
     }
 }
 
 extension PayWallViewModel {
-    func setup() async {
+    @MainActor
+    func reload() async {
         do {
             state = .loading
-            packages = try await pm.fetchPackages()
-            purchaseInfo = try await pm.getPurchaseInfo()
-            state = .loaded
-            isPurchaseLoading = false
+            async let packagesTask = try pm.fetchPackages()
+            async let infoTask = try pm.getPurchaseInfo()
+            let (packages, info) = try await (packagesTask, infoTask)
+            
+            self.packages = packages
+            self.purchaseInfo = info
+            self.state = .loaded
+            self.isPurchaseLoading = false
         } catch {
-            state = .error(error)
+            self.state = .error(error)
         }
     }
     
+    @MainActor
     func purchase() async {
         guard let package = selectedPackage else {
             assertionFailure()
@@ -63,15 +72,37 @@ extension PayWallViewModel {
             let userCancelled = try await pm.purchase(package).userCancelled
             
             if userCancelled {
-                
+                config.presentErrorAlert(.purchaseFailure)
             } else {
-                
+                await reload()
+                config.presentErrorAlert(.purchaseSuccess)
             }
         } catch {
-
+            config.presentErrorAlert(.purchaseFailure)
         }
         
         isPurchaseLoading = false
+    }
+    
+    @MainActor
+    func restore() async {
+        guard state.isLoaded && !isPurchaseLoading else {
+            return
+        }
+        
+        isPurchaseLoading = true
+        
+        do {
+            let response = try await pm.restore()
+            
+            if response?.hasAccessToPro != true {
+                config.presentErrorAlert(.restoreFailure)
+            }
+            
+            await reload()
+        } catch {
+            config.presentErrorAlert(.restoreFailure)
+        }
     }
 }
 
@@ -87,4 +118,9 @@ public extension PayWallViewModel {
             return false
         }
     }
+    
+}
+
+public enum PayWallErrorAlertType {
+    case restoreFailure, purchaseFailure, purchaseSuccess
 }

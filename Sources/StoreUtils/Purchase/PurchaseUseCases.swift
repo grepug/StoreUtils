@@ -12,6 +12,10 @@ struct PurchaseUseCases {
         RevenueCat.Purchases.shared
     }
     
+    func configRevenueCat(withAPIKey key: String) {
+        RevenueCat.Purchases.configure(withAPIKey: key)
+    }
+    
     func fetchPackages() async throws -> [Package] {
         guard let offering = try await fetchCurrentOffering() else {
             return []

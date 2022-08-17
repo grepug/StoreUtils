@@ -8,15 +8,15 @@
 import Foundation
 import RevenueCat
 
-public struct Package {
-    var id: String = ""
-    var title: String = ""
-    var originalPriceString: String?
-    var currentPriceString: String = ""
+public struct Package: Identifiable {
+    public var id: String = ""
+    public var title: String = ""
+    public var originalPriceString: String?
+    public var currentPriceString: String = ""
     var currentPriceDouble: Double = 0
-    var isSubscription: Bool = false
+    public var isSubscription: Bool = false
     var rcPackage: RevenueCat.Package!
-    var purchased: Bool = false
+    public var purchased: Bool = false
     var packageType: RevenueCat.PackageType = .unknown
     var productId: String
 }

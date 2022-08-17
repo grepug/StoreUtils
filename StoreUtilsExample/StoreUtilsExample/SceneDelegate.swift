@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import SwiftUI
+import StoreUtils
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -19,7 +21,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: scene)
-        let vc = ViewController()
+        
+        let config = PayWallConfig {
+            false
+        } presentErrorAlert: { type in
+            
+        }
+        
+        config.configRevenueCat(withAPIKey: "FokOLeJNisqopzIIybWrDTpxIIJLNLPJ")
+
+        let model = PayWallViewModel(config: config)
+        let view = PayWall(vm: model)
+        let vc = UIHostingController(rootView: view)
         let nav = UINavigationController(rootViewController: vc)
         window.rootViewController = nav
         window.makeKeyAndVisible()

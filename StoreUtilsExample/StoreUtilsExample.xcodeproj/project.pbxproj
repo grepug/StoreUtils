@@ -16,6 +16,7 @@
 		2A51AC6E28AB445500830889 /* DiffableList in Frameworks */ = {isa = PBXBuildFile; productRef = 2A51AC6D28AB445500830889 /* DiffableList */; };
 		2A51AC7128AB73B400830889 /* StoreUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 2A51AC7028AB73B400830889 /* StoreUtils */; };
 		2A51AC7328AB73B600830889 /* StoreUtilsUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2A51AC7228AB73B600830889 /* StoreUtilsUI */; };
+		2A51AC7528AB95AC00830889 /* PayWall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A51AC7428AB95AC00830889 /* PayWall.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,8 @@
 		2A51AC6228AB43DF00830889 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2A51AC6428AB43DF00830889 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2A51AC6B28AB43F800830889 /* StoreUtils */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = StoreUtils; path = ..; sourceTree = "<group>"; };
+		2A51AC7428AB95AC00830889 /* PayWall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayWall.swift; sourceTree = "<group>"; };
+		2A51AC7628AB962C00830889 /* Configuration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Configuration.storekit; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +75,8 @@
 				2A51AC5F28AB43DF00830889 /* Assets.xcassets */,
 				2A51AC6128AB43DF00830889 /* LaunchScreen.storyboard */,
 				2A51AC6428AB43DF00830889 /* Info.plist */,
+				2A51AC7428AB95AC00830889 /* PayWall.swift */,
+				2A51AC7628AB962C00830889 /* Configuration.storekit */,
 			);
 			path = StoreUtilsExample;
 			sourceTree = "<group>";
@@ -172,6 +177,7 @@
 			files = (
 				2A51AC5B28AB43DD00830889 /* ViewController.swift in Sources */,
 				2A51AC5728AB43DD00830889 /* AppDelegate.swift in Sources */,
+				2A51AC7528AB95AC00830889 /* PayWall.swift in Sources */,
 				2A51AC5928AB43DD00830889 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -324,7 +330,6 @@
 				INFOPLIST_FILE = StoreUtilsExample/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -352,7 +357,6 @@
 				INFOPLIST_FILE = StoreUtilsExample/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
