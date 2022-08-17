@@ -8,7 +8,7 @@
 import Foundation
 import RevenueCat
 
-public struct Package: Identifiable {
+public struct Package: Identifiable, Hashable {
     public var id: String = ""
     public var title: String = ""
     public var originalPriceString: String?
@@ -19,6 +19,22 @@ public struct Package: Identifiable {
     public var purchased: Bool = false
     var packageType: RevenueCat.PackageType = .unknown
     var productId: String
+}
+
+extension Package {
+    var purchasedText: String {
+        switch self.isSubscription {
+        case true: return "settings_pro_subscribed".loc
+        case false: return "settings_pro_purchased".loc
+        }
+    }
+    
+    var purchaseText: String {
+        switch self.isSubscription {
+        case true: return "settings_pro_subscribe".loc
+        case false: return "settings_pro_purchase".loc
+        }
+    }
 }
 
 extension Package {

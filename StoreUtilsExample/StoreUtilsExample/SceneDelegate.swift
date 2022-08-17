@@ -22,18 +22,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: scene)
         
-        let config = PayWallConfig {
-            false
-        } presentErrorAlert: { type in
-            
+        let nav = PayWall.makeViewController { [unowned window] in
+            window.rootViewController!
         }
-        
-        config.configRevenueCat(withAPIKey: "FokOLeJNisqopzIIybWrDTpxIIJLNLPJ")
-
-        let model = PayWallViewModel(config: config)
-        let view = PayWall(vm: model)
-        let vc = UIHostingController(rootView: view)
-        let nav = UINavigationController(rootViewController: vc)
         window.rootViewController = nav
         window.makeKeyAndVisible()
         

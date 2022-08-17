@@ -16,6 +16,7 @@ public struct PayWallConfig {
     
     public var showingProTestSwitch: () -> Bool
     public var presentErrorAlert: (PayWallErrorAlertType) -> Void
+    public var defaultSelectedPakcage: (([Package]) -> Package)?
 }
 
 public extension PayWallConfig {

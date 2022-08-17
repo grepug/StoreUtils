@@ -17,6 +17,16 @@ public class PayWallViewModel: ObservableObject {
     @Published public var packages: [Package] = []
     @Published public var isPurchaseLoading = false
     
+    public var purchaseButtonText: String {
+        currentPurchasedPackage?.purchasedText ??
+        selectedPackage?.purchaseText ??
+        "settings_pro_loading"
+    }
+    
+    public var purchaseButtonDisabled: Bool {
+        currentPurchasedPackage != nil || selectedPackage == nil || !state.isLoaded
+    }
+    
     var currentPurchasedPackage: Package? {
         guard let info = purchaseInfo,
               state.isLoaded else { return nil }
@@ -37,11 +47,13 @@ public class PayWallViewModel: ObservableObject {
         
         Task {
             await reload()
+            
+            if let defaultSelectedPackage = config.defaultSelectedPakcage?(packages) {
+                selectedPackage = defaultSelectedPackage
+            }
         }
     }
-}
-
-extension PayWallViewModel {
+    
     @MainActor
     func reload() async {
         do {
@@ -58,7 +70,9 @@ extension PayWallViewModel {
             self.state = .error(error)
         }
     }
-    
+}
+
+public extension PayWallViewModel {
     @MainActor
     func purchase() async {
         guard let package = selectedPackage else {
@@ -123,4 +137,12 @@ public extension PayWallViewModel {
 
 public enum PayWallErrorAlertType {
     case restoreFailure, purchaseFailure, purchaseSuccess
+    
+    public var title: String {
+        switch self {
+        case .purchaseSuccess: return "action_pro_puchase_alert_success"
+        case .restoreFailure: return "action_pro_restore_alert_error"
+        case .purchaseFailure: return "action_pro_puchase_alert_error"
+        }
+    }
 }

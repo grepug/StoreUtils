@@ -1,22 +1,27 @@
 {
-  "identifier" : "16D62AF2",
+  "identifier" : "75D01307",
   "nonRenewingSubscriptions" : [
 
   ],
   "products" : [
     {
-      "displayPrice" : "0.99",
+      "displayPrice" : "108.12",
       "familyShareable" : false,
-      "internalID" : "D86ABB31",
+      "internalID" : "3B76721C",
       "localizations" : [
         {
-          "description" : "hahahahha",
-          "displayName" : "Lifetime Unlock",
+          "description" : "永久解锁",
+          "displayName" : "永久解锁",
           "locale" : "en_US"
+        },
+        {
+          "description" : "永久解锁",
+          "displayName" : "永久解锁",
+          "locale" : "zh_CN"
         }
       ],
-      "productID" : "com.temporary.id",
-      "referenceName" : "vis_lifetime",
+      "productID" : "vis_lifetime_unlock",
+      "referenceName" : "Lifetime unlock",
       "type" : "NonConsumable"
     }
   ],
@@ -24,7 +29,116 @@
 
   },
   "subscriptionGroups" : [
+    {
+      "id" : "46DBBB2B",
+      "localizations" : [
 
+      ],
+      "name" : "Vision Pro",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "68",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6B119660",
+          "introductoryOffer" : {
+            "internalID" : "1FD0A15F",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P2W"
+          },
+          "localizations" : [
+            {
+              "description" : "年付（2周免费试用）",
+              "displayName" : "年付（2周免费试用）",
+              "locale" : "en_US"
+            },
+            {
+              "description" : "一年订阅，自动续费",
+              "displayName" : "一年订阅，7天试用",
+              "locale" : "zh_CN"
+            }
+          ],
+          "productID" : "vis_1y_2w_free",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "One year subscription 2w free",
+          "subscriptionGroupID" : "46DBBB2B",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "12",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "E24D1CEC",
+          "introductoryOffer" : {
+            "displayPrice" : "9",
+            "internalID" : "4D3EBE80",
+            "numberOfPeriods" : 1,
+            "paymentMode" : "payAsYouGo",
+            "subscriptionPeriod" : "P1M"
+          },
+          "localizations" : [
+            {
+              "description" : "月付",
+              "displayName" : "月付",
+              "locale" : "en_US"
+            },
+            {
+              "description" : "月付，3天试用",
+              "displayName" : "月付，3天试用",
+              "locale" : "zh_CN"
+            }
+          ],
+          "productID" : "vis_1m",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "One Month Subscription",
+          "subscriptionGroupID" : "46DBBB2B",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "108",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "3F1E677D",
+          "introductoryOffer" : {
+            "displayPrice" : "68",
+            "internalID" : "08D9A14E",
+            "numberOfPeriods" : 1,
+            "paymentMode" : "payAsYouGo",
+            "subscriptionPeriod" : "P1Y"
+          },
+          "localizations" : [
+            {
+              "description" : "年付",
+              "displayName" : "年付",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "vis_1y",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "One Year Subscription",
+          "subscriptionGroupID" : "46DBBB2B",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
   ],
   "version" : {
     "major" : 1,
