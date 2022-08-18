@@ -8,7 +8,7 @@
 import Foundation
 import RevenueCat
 
-public struct PurchaseInfo {
+public struct SUPurchaseInfo {
     public let userId: String
     public let activeSubscriptions: Set<String>
     public let allPurchasedProductIdentifiers: Set<String>
@@ -19,7 +19,7 @@ public struct PurchaseInfo {
     public let managementURL: URL?
 }
 
-extension PurchaseInfo {
+extension SUPurchaseInfo {
     static func fromPurchaseInfo(info: RevenueCat.CustomerInfo) -> Self {
         return .init(userId: info.originalAppUserId,
                      activeSubscriptions: info.activeSubscriptions,

@@ -8,8 +8,8 @@
 import Foundation
 import RevenueCat
 
-public struct PayWallConfig {
-    public init(showingProTestSwitch: @escaping () -> Bool, presentErrorAlert: @escaping (PayWallErrorAlertType) -> Void, presentConfirm: @escaping (PayWallConfirmType) async -> Bool, defaultSelectedPakcage: (([Package]) -> Package)? = nil) {
+public struct SUPayWallConfig {
+    public init(showingProTestSwitch: @escaping () -> Bool, presentErrorAlert: @escaping (PayWallErrorAlertType) -> Void, presentConfirm: @escaping (PayWallConfirmType) async -> Bool, defaultSelectedPakcage: (([SUPackage]) -> SUPackage)? = nil) {
         self.showingProTestSwitch = showingProTestSwitch
         self.presentErrorAlert = presentErrorAlert
         self.presentConfirm = presentConfirm
@@ -19,14 +19,14 @@ public struct PayWallConfig {
     public var showingProTestSwitch: () -> Bool
     public var presentErrorAlert: (PayWallErrorAlertType) -> Void
     public var presentConfirm: (PayWallConfirmType) async -> Bool
-    public var defaultSelectedPakcage: (([Package]) -> Package?)?
+    public var defaultSelectedPakcage: (([SUPackage]) -> SUPackage?)?
 }
 
-public enum StoreUtilsError: Error {
+public enum SUError: Error {
     case revenueCatError(RevenueCat.ErrorCode), other(Error)
 }
 
-public extension StoreUtilsError {
+public extension SUError {
     var description: String {
         switch self {
         case .revenueCatError(let rcError):

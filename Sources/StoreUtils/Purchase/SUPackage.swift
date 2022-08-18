@@ -8,7 +8,7 @@
 import Foundation
 import RevenueCat
 
-public struct Package: Identifiable, Hashable {
+public struct SUPackage: Identifiable, Hashable {
     public var id: String = ""
     public var title: String = ""
     public var currentPriceString: String = ""
@@ -20,7 +20,7 @@ public struct Package: Identifiable, Hashable {
     public var productId: String
 }
 
-extension Package {
+extension SUPackage {
     var purchasedText: String {
         switch self.isSubscription {
         case true: return "settings_pro_subscribed".loc
@@ -36,9 +36,9 @@ extension Package {
     }
 }
 
-extension Package {
+extension SUPackage {
     static func fromPurchasePackage(_ rcPackage: RevenueCat.Package,
-                                    info: PurchaseInfo) -> Self {
+                                    info: SUPurchaseInfo) -> Self {
         let product = rcPackage.storeProduct
         
         return .init(id: rcPackage.identifier,

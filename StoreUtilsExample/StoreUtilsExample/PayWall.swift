@@ -11,7 +11,7 @@ import SwiftUI
 import UIKitUtils
 
 struct PayWall: View {
-    @ObservedObject var vm: PayWallViewModel
+    @ObservedObject var vm: SUPayWallViewModel
     
     var body: some View {
         content
@@ -63,7 +63,7 @@ struct PayWall: View {
         }
     }
     
-    func packageItem(_ package: Package,
+    func packageItem(_ package: SUPackage,
                      state: PayWallPackageState,
                      action: @escaping () -> Void) -> some View {
         Button {
@@ -89,7 +89,7 @@ struct PayWall: View {
 
 extension PayWall {
     static func makeViewController(parentVC: @escaping () -> UIViewController) -> UIViewController {
-        var config = PayWallConfig {
+        var config = SUPayWallConfig {
             false
         } presentErrorAlert: { type in
             parentVC().presentAlertController(title: type.title, message: nil, actions: [.ok()])
@@ -103,7 +103,7 @@ extension PayWall {
             packages.last
         }
         
-        let model = PayWallViewModel(config: config)
+        let model = SUPayWallViewModel(config: config)
         let view = PayWall(vm: model)
         let vc = UIHostingController(rootView: view)
         let nav = UINavigationController(rootViewController: vc)
@@ -129,7 +129,7 @@ extension PayWallPackageState {
     }
 }
 
-extension Package {
+extension SUPackage {
     var originalPriceString: String? {
         let product = rcPackage.storeProduct
         

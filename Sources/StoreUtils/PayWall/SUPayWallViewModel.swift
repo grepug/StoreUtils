@@ -8,14 +8,14 @@
 import Foundation
 import RevenueCat
 
-public class PayWallViewModel: ObservableObject {
-    let pm = PurchaseUseCases()
-    let config: PayWallConfig
+public class SUPayWallViewModel: ObservableObject {
+    let pm = SUPurchaseUseCases()
+    let config: SUPayWallConfig
     
-    @Published public var selectedPackage: Package?
-    @Published public var purchaseInfo: PurchaseInfo?
+    @Published public var selectedPackage: SUPackage?
+    @Published public var purchaseInfo: SUPurchaseInfo?
     @Published public var state = PageState.loading
-    @Published public var packages: [Package] = []
+    @Published public var packages: [SUPackage] = []
     @Published public var isPurchaseLoading = false
     
     public var purchaseButtonText: String {
@@ -39,7 +39,7 @@ public class PayWallViewModel: ObservableObject {
         return true
     }
     
-    var currentPurchasedPackage: Set<Package> {
+    var currentPurchasedPackage: Set<SUPackage> {
         guard let info = purchaseInfo,
               state.isLoaded else { return [] }
         
@@ -58,7 +58,7 @@ public class PayWallViewModel: ObservableObject {
         currentPurchasedPackage.contains { !$0.isSubscription }
     }
     
-    public init(config: PayWallConfig) {
+    public init(config: SUPayWallConfig) {
         self.config = config
         
         Task {
@@ -71,7 +71,7 @@ public class PayWallViewModel: ObservableObject {
     }
 }
 
-public extension PayWallViewModel {
+public extension SUPayWallViewModel {
     @MainActor
     func reload() async {
         do {
@@ -145,7 +145,7 @@ public extension PayWallViewModel {
         }
     }
     
-    func packageState(_ pkg: Package) -> PayWallPackageState {
+    func packageState(_ pkg: SUPackage) -> PayWallPackageState {
         if currentPurchasedPackage.contains(pkg) {
             return .active
         }
@@ -158,13 +158,13 @@ public extension PayWallViewModel {
     }
 }
 
-extension PayWallViewModel {
+extension SUPayWallViewModel {
 
 }
 
-public extension PayWallViewModel {
+public extension SUPayWallViewModel {
     enum PageState {
-        case loading, error(StoreUtilsError), loaded
+        case loading, error(SUError), loaded
         
         var isLoaded: Bool {
             if case .loaded = self {

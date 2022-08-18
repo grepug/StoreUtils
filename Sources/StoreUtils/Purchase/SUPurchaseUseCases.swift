@@ -7,7 +7,7 @@
 
 import RevenueCat
 
-public struct PurchaseUseCases {
+public struct SUPurchaseUseCases {
     public static func configureRevenueCat(withAPIKey key: String) {
         RevenueCat.Purchases.configure(withAPIKey: key)
     }
@@ -20,7 +20,7 @@ public struct PurchaseUseCases {
         RevenueCat.Purchases.configure(withAPIKey: key)
     }
     
-    func fetchPackages() async throws -> [Package] {
+    func fetchPackages() async throws -> [SUPackage] {
         guard let offering = try await rc.offerings().current else {
             return []
         }
@@ -29,7 +29,7 @@ public struct PurchaseUseCases {
             return []
         }
         
-        let packages: [Package] = offering.availablePackages.map {
+        let packages: [SUPackage] = offering.availablePackages.map {
             .fromPurchasePackage($0, info: info)
         }
         let idsNotInOffering = info.allPurchasedProductIdentifiers.subtracting(packages.map(\.productId))
@@ -43,7 +43,7 @@ public struct PurchaseUseCases {
         return packages + purchasedPackages
     }
     
-    func getPurchaseInfo() async throws -> PurchaseInfo? {
+    func getPurchaseInfo() async throws -> SUPurchaseInfo? {
         try await withCheckedThrowingContinuation { continuation in
             rc.getCustomerInfo { info, error in
                 if let error = error {
@@ -51,17 +51,17 @@ public struct PurchaseUseCases {
                     return
                 }
                 
-                let purchaseInfo = info.map { PurchaseInfo.fromPurchaseInfo(info: $0) }
+                let purchaseInfo = info.map { SUPurchaseInfo.fromPurchaseInfo(info: $0) }
                 
                 continuation.resume(returning: purchaseInfo)
             }
         }
     }
     
-    func getPurchasedPackage(ids: [String]) async -> [Package] {
+    func getPurchasedPackage(ids: [String]) async -> [SUPackage] {
         await withCheckedContinuation { continuation in
             rc.getProducts(ids) { skProducts in
-                let packages: [Package] = skProducts.map { prod in
+                let packages: [SUPackage] = skProducts.map { prod in
                         .init(id: prod.productIdentifier,
                               title: prod.localizedTitle,
                               currentPriceString: prod.currentPriceString,
@@ -76,11 +76,11 @@ public struct PurchaseUseCases {
         }
     }
     
-    func purchase(_ package: Package) async throws -> PurchaseResultData {
+    func purchase(_ package: SUPackage) async throws -> PurchaseResultData {
         try await rc.purchase(package: package.rcPackage)
     }
     
-    func restore() async throws -> PurchaseInfo? {
+    func restore() async throws -> SUPurchaseInfo? {
         let info = try await rc.restorePurchases()
         
         return .fromPurchaseInfo(info: info)
