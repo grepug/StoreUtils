@@ -9,7 +9,7 @@ import Foundation
 import RevenueCat
 
 public struct SUPayWallConfig {
-    public init(showingProTestSwitch: @escaping () -> Bool, presentErrorAlert: @escaping (PayWallErrorAlertType) -> Void, presentConfirm: @escaping (PayWallConfirmType) async -> Bool, defaultSelectedPakcage: (([SUPackage]) -> SUPackage)? = nil) {
+    public init(showingProTestSwitch: @escaping () -> Bool, presentErrorAlert: @escaping (SUPayWallErrorAlertType) -> Void, presentConfirm: @escaping (SUPayWallConfirmType) async -> Bool, defaultSelectedPakcage: (([SUPackage]) -> SUPackage?)? = nil) {
         self.showingProTestSwitch = showingProTestSwitch
         self.presentErrorAlert = presentErrorAlert
         self.presentConfirm = presentConfirm
@@ -17,8 +17,8 @@ public struct SUPayWallConfig {
     }
     
     public var showingProTestSwitch: () -> Bool
-    public var presentErrorAlert: (PayWallErrorAlertType) -> Void
-    public var presentConfirm: (PayWallConfirmType) async -> Bool
+    public var presentErrorAlert: (SUPayWallErrorAlertType) -> Void
+    public var presentConfirm: (SUPayWallConfirmType) async -> Bool
     public var defaultSelectedPakcage: (([SUPackage]) -> SUPackage?)?
 }
 

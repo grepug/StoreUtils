@@ -20,7 +20,7 @@ public class SUPayWallViewModel: ObservableObject {
     
     public var purchaseButtonText: String {
         selectedPackage?.purchaseText ??
-        "settings_pro_loading"
+        "settings_pro_loading".loc
     }
     
     public var purchaseButtonDisabled: Bool {
@@ -145,7 +145,23 @@ public extension SUPayWallViewModel {
         }
     }
     
-    func packageState(_ pkg: SUPackage) -> PayWallPackageState {
+    func selectPackage(_ pkg: SUPackage) {
+        guard packageState(pkg) == .none else {
+            return
+        }
+        
+        guard pkg.rcPackage != nil else {
+            return
+        }
+        
+        selectedPackage = pkg
+    }
+    
+    func packageState(_ pkg: SUPackage) -> SUPayWallPackageState {
+        if hasPurchasedNonsubscription && pkg.isSubscription {
+            return .none
+        }
+        
         if currentPurchasedPackage.contains(pkg) {
             return .active
         }
@@ -177,11 +193,11 @@ public extension SUPayWallViewModel {
     
 }
 
-public enum PayWallPackageState {
+public enum SUPayWallPackageState {
     case selected, active, none
 }
 
-public enum PayWallConfirmType {
+public enum SUPayWallConfirmType {
     case convertingFromSubscriptionToNonsubscription
     
     public var title: String {
@@ -195,7 +211,7 @@ public enum PayWallConfirmType {
     }
 }
 
-public enum PayWallErrorAlertType {
+public enum SUPayWallErrorAlertType {
     case restoreFailure, purchaseFailure, purchaseSuccess
     
     public var title: String {

@@ -58,6 +58,7 @@ public struct SUPurchaseUseCases {
         }
     }
     
+    /// 这里通过 id 获取 SKProduct，用于显示已经下架的 package，所以这里获取不到 rcPackage
     func getPurchasedPackage(ids: [String]) async -> [SUPackage] {
         await withCheckedContinuation { continuation in
             rc.getProducts(ids) { skProducts in
@@ -77,7 +78,7 @@ public struct SUPurchaseUseCases {
     }
     
     func purchase(_ package: SUPackage) async throws -> PurchaseResultData {
-        try await rc.purchase(package: package.rcPackage)
+        try await rc.purchase(package: package.rcPackage!)
     }
     
     func restore() async throws -> SUPurchaseInfo? {

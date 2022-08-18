@@ -12,9 +12,9 @@ public struct SUPackage: Identifiable, Hashable {
     public var id: String = ""
     public var title: String = ""
     public var currentPriceString: String = ""
-    var currentPriceDouble: Double = 0
+    public var currentPriceDouble: Double = 0
     public var isSubscription: Bool = false
-    public var rcPackage: RevenueCat.Package!
+    public var rcPackage: RevenueCat.Package?
     public var purchased: Bool = false
     var packageType: RevenueCat.PackageType = .unknown
     public var productId: String
