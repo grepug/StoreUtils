@@ -25,27 +25,41 @@ struct PayWall: View {
             }
     }
     
+    @ViewBuilder
     var content: some View {
-        VStack {
-            ForEach(vm.packages) { pkg in
-                packageItem(pkg, state: vm.packageState(pkg)) {
-                    vm.selectedPackage = pkg
+        switch vm.state {
+        case .loaded, .loading:
+            VStack {
+                ForEach(vm.packages) { pkg in
+                    packageItem(pkg, state: vm.packageState(pkg)) {
+                        vm.selectedPackage = pkg
+                    }
+                }
+                
+                Button {
+                    Task {
+                        await vm.purchase()
+                    }
+                } label: {
+                    Text(vm.purchaseButtonText)
+                        .padding()
+                        .background(vm.purchaseButtonDisabled ? .gray : Color.blue)
+                        .cornerRadius(12)
+                }
+                .padding(.top, 32)
+                .foregroundColor(.white)
+                .disabled(vm.purchaseButtonDisabled)
+            }
+        case .error(let error):
+            VStack(spacing: 32) {
+                Text(error.description)
+                    
+                Button("Retry") {
+                    Task {
+                        await vm.reload()
+                    }
                 }
             }
-            
-            Button {
-                Task {
-                    await vm.purchase()
-                }
-            } label: {
-                Text(vm.purchaseButtonText)
-                    .padding()
-                    .background(vm.purchaseButtonDisabled ? .gray : Color.blue)
-                    .cornerRadius(12)
-            }
-            .padding(.top, 32)
-            .foregroundColor(.white)
-            .disabled(vm.purchaseButtonDisabled)
         }
     }
     
@@ -56,7 +70,7 @@ struct PayWall: View {
             action()
         } label: {
             VStack {
-                Text(package.title)
+                Text(package.displayTitle)
                 Text(package.currentPriceString)
                 
                 if let origin = package.originalPriceString {
@@ -86,10 +100,8 @@ extension PayWall {
         }
         
         config.defaultSelectedPakcage = { packages in
-            packages[2]
+            packages.last
         }
-        
-        config.configRevenueCat(withAPIKey: "FokOLeJNisqopzIIybWrDTpxIIJLNLPJ")
         
         let model = PayWallViewModel(config: config)
         let view = PayWall(vm: model)
@@ -139,6 +151,28 @@ extension Package {
             return "\(currencyCode) \(price.doubleValue.toString(toFixed: 2))"
         default: return nil
         }
+    }
+    
+    var displayTitle: String {
+        switch productId {
+        case "vis_1m": return "v3_pro_purchase_type_month"
+        case "vis_lifetime_unlock": return "v3_pro_purchase_type_lifetime"
+        case "vis_1y_2w_free": return "v3_pro_purchase_type_annual"
+        case "vis_lifetime_3.0_promo": return "v3_pro_purchase_type_lifetime"
+        default: return title
+        }
+    }
+    
+    var displaySubtitle: String? {
+        switch productId {
+        case "vis_1y_2w_free": return "v3_pro_purchase_type_sub_annual"
+        case "vis_lifetime_3.0_promo": return "v3_pro_purchase_type_sub_3.0_promo"
+        default: return nil
+        }
+    }
+    
+    var showingOriginalPrice: Bool {
+        displaySubtitle == nil
     }
 }
 

@@ -17,7 +17,7 @@ public struct Package: Identifiable, Hashable {
     public var rcPackage: RevenueCat.Package!
     public var purchased: Bool = false
     var packageType: RevenueCat.PackageType = .unknown
-    var productId: String
+    public var productId: String
 }
 
 extension Package {

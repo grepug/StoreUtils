@@ -7,7 +7,11 @@
 
 import RevenueCat
 
-struct PurchaseUseCases {
+public struct PurchaseUseCases {
+    public static func configureRevenueCat(withAPIKey key: String) {
+        RevenueCat.Purchases.configure(withAPIKey: key)
+    }
+    
     private var rc: Purchases {
         RevenueCat.Purchases.shared
     }
@@ -17,7 +21,7 @@ struct PurchaseUseCases {
     }
     
     func fetchPackages() async throws -> [Package] {
-        guard let offering = try await fetchCurrentOffering() else {
+        guard let offering = try await rc.offerings().current else {
             return []
         }
         
@@ -82,10 +86,3 @@ struct PurchaseUseCases {
         return .fromPurchaseInfo(info: info)
     }
 }
-
-extension PurchaseUseCases {
-    func fetchCurrentOffering() async throws -> RevenueCat.Offering? {
-        try await rc.offerings().current
-    }
-}
-

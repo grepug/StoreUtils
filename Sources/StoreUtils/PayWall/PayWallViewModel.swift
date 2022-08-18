@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RevenueCat
 
 public class PayWallViewModel: ObservableObject {
     let pm = PurchaseUseCases()
@@ -68,26 +69,29 @@ public class PayWallViewModel: ObservableObject {
             }
         }
     }
-    
+}
+
+public extension PayWallViewModel {
     @MainActor
     func reload() async {
         do {
             state = .loading
             async let packagesTask = try pm.fetchPackages()
             async let infoTask = try pm.getPurchaseInfo()
-            let (packages, info) = try await (packagesTask, infoTask)
             
-            self.packages = packages
-            self.purchaseInfo = info
-            self.state = .loaded
-            self.isPurchaseLoading = false
+            packages = try await packagesTask
+            purchaseInfo = try await infoTask
+            state = .loaded
+            isPurchaseLoading = false
         } catch {
-            self.state = .error(error)
+            if let error = error as? RevenueCat.ErrorCode {
+                state = .error(.revenueCatError(error))
+            } else {
+                state = .error(.other(error))
+            }
         }
     }
-}
-
-public extension PayWallViewModel {
+    
     @MainActor
     func purchase() async {
         guard let package = selectedPackage else {
@@ -160,7 +164,7 @@ extension PayWallViewModel {
 
 public extension PayWallViewModel {
     enum PageState {
-        case loading, error(Error), loaded
+        case loading, error(StoreUtilsError), loaded
         
         var isLoaded: Bool {
             if case .loaded = self {
