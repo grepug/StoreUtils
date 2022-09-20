@@ -3,10 +3,10 @@
     {
       "identity" : "diffablelist",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/grepug/DiffableList",
+      "location" : "https://github.com/grepug/DiffableList.git",
       "state" : {
         "branch" : "dev_3.1.0",
-        "revision" : "d24c6c7d90ec1b20e05e6337fbc5d2e9d9b0010f"
+        "revision" : "24954a880a7700e1fdcf1acf7ab4e1074db9934f"
       }
     },
     {
@@ -15,7 +15,7 @@
       "location" : "https://github.com/grepug/MenuBuilder",
       "state" : {
         "branch" : "master",
-        "revision" : "7660a29f3499555f111081113bef11695b45847e"
+        "revision" : "0151400d869dd634ab235acf73f7226b7976ebd1"
       }
     },
     {
